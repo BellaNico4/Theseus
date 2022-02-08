@@ -17,7 +17,11 @@ def home():
 @app.route('/images/<string:pid>', methods=["GET"])
 def get_image(pid):
     print("Image: " + pid)
-    return send_file("./images/" + pid, mimetype="image/gif")
+    try:
+        file = send_file("./images/" + pid, mimetype="image/gif")
+    except:
+        pass
+    return file
 
 
 @app.route('/process', methods=['POST'])
