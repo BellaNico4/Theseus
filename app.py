@@ -1,6 +1,7 @@
 import os
+from urllib import response
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 from google.oauth2 import service_account
 import dialogflow_v2 as dialogflow
 
@@ -12,6 +13,11 @@ print(os.getcwd())
 def home():
     # just render the HTML homepage
     return render_template("index.html")
+
+@app.route('/images/<string:pid>', methods=["GET"])
+def get_image(pid):
+    print("Image: " + pid)
+    return send_file("./images/" + pid, mimetype="image/gif")
 
 
 @app.route('/process', methods=['POST'])
@@ -33,8 +39,12 @@ def detect_intent():
 
     # reply to the POST request: the textual response is in "fullfilment"
     ret_string = ''
+    num_sentences = 0
     for messages in response.query_result.fulfillment_messages._values:
+        num_sentences += 1
         ret_string+=messages.text.text._values[0] + '\n\n'
+    if num_sentences > 1:
+        return ret_string + "$$" + "/images/route.jpg"
     return ret_string
     #return response.query_result.fulfillment_text
 

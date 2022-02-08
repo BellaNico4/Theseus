@@ -137,16 +137,23 @@ function respond(val) {
   if (val === "") {
     val = messageSorry;
   }
-
-  if(val !== messageRecording) {
+  sentences = val.split("$$")
+  console.log(val)
+  console.log(sentences)
+  if(sentences[0] !== messageRecording) {
   let msg = new SpeechSynthesisUtterance();
-  msg.text = val;
+  msg.text = sentences[0];
   msg.lang = "en-US";
   window.speechSynthesis.speak(msg);
   }
 
-  // add the new message in the chat area
-  createBubbleChat(val, "other");
+  if (sentences.length > 1) {
+    createBubbleChatWithImage(sentences[0], "other", sentences[1])
+  }
+  else {
+    // add the new message in the chat area
+    createBubbleChat(sentences[0], "other");
+  }
 }
 
 //--- Utility functions ---//
@@ -155,4 +162,9 @@ function respond(val) {
 function createBubbleChat(val, type){
   $(".chat").append('<li class="'+type+'"><div class="msg"><p>'+val+'</p></div></li>');
   window.scrollTo(0,document.body.scrollHeight);
+}
+
+function createBubbleChatWithImage(val, type, image) {
+  $(".chat").append('<li class="' + type + '"><div class="msg"><p>' + val + '</p><img src=\"'+image+'\"/></div></li>');
+  window.scrollTo(0, document.body.scrollHeight);
 }
