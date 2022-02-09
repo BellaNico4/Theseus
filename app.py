@@ -44,10 +44,13 @@ def detect_intent():
     # reply to the POST request: the textual response is in "fullfilment"
     ret_string = ''
     num_sentences = 0
+    shouldShowMap = False
     for messages in response.query_result.fulfillment_messages._values:
         num_sentences += 1
         ret_string+=messages.text.text._values[0] + '\n\n'
-    if num_sentences > 1:
+        shouldShowMap = shouldShowMap or "corridor" in messages.text.text._values[
+            0] or "courtyard" in messages.text.text._values[0]
+    if num_sentences > 1 and shouldShowMap:
         return ret_string + "$$" + "/images/route.jpg"
     return ret_string
     #return response.query_result.fulfillment_text
